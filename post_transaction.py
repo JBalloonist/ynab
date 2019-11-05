@@ -22,15 +22,11 @@ def post_trans(payload):
     print('')
     print(r.status_code)
     print('')
-    # print(r.text)
-    # print('')
-    # print(r.request.body)
 
 
 def amortization_parser(file, add_days, sub_days):
     df = pd.read_csv(file)
     df.date = pd.to_datetime(df.date)
-    df.amount = df.amount.astype('int64')
 
     plus_day = now + timedelta(days=add_days)
     minus_day = now - timedelta(days=sub_days)

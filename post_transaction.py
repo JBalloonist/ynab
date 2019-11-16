@@ -16,30 +16,48 @@ URL = 'https://api.youneedabudget.com/v1/'
 fmt = '%Y-%m-%d'
 
 
+class Amortization(object):
+    now = datetime.now()
+
+    def __init__(self, file, add_days, sub_days):
+        self.file = file
+        self.add_days = add_days
+        self.sub_days = sub_days
+        self.df = pd.read_csv(self.file)
+        self.df.date = pd.to_datetime(self.df.date)
+
+    def plus_day(self):
+        return self.now + timedelta(days=self.add_days)
+
+    def minus_day(self):
+        return self.now - timedelta(days=self.sub_days)
+
+    def get_next(self):
+        df = self.df.copy()
+        trans = df.loc[(df.date < self.plus_day()) & (df.date > self.minus_day())].copy()
+        return trans
+
+    def get_remaining(self):
+        df = self.df.copy()
+        df = df.loc[(df.date > self.plus_day())]
+        print('Data to keep: ')
+        print(df.head())
+        return df
+
+    def export_remaining(self):
+        self.get_remaining().to_csv(self.file, index=False)
+
+
 def post_trans(payload):
     url = '{}budgets/{}/transactions?access_token={}'.format(URL, BUDGET_ID, TOKEN)
     r = requests.post(url, json=payload)
     print('')
     print(r.status_code)
     print('')
-
-
-def amortization_parser(file, add_days, sub_days):
-    df = pd.read_csv(file)
-    df.date = pd.to_datetime(df.date)
-
-    plus_day = now + timedelta(days=add_days)
-    minus_day = now - timedelta(days=sub_days)
-    print(minus_day)
-    print(plus_day)
-
-    keep = df.loc[(df.date > plus_day)].copy()
-    print('Data to keep from {}: '.format(file))
-    print(keep.head())
-    keep.to_csv(file, index=False)
-
-    trans = df.loc[(df.date < plus_day) & (df.date > minus_day)].copy()
-    return trans
+    print(r.text)
+    print('')
+    print(r.request.body)
+    return r.status_code
 
 
 def create_ynab_trans(trans):
@@ -47,17 +65,18 @@ def create_ynab_trans(trans):
     trans_dict = trans.T.to_dict()
     trans = trans_dict[0]
     payload = {'transaction': trans}
-    post_trans(payload)
+    return post_trans(payload)
 
-
-create_ynab_trans(amortization_parser(PATH + 'loop.csv', 1, 1))
-create_ynab_trans(amortization_parser(PATH + 'cudgel.csv', 1, 1))
 
 sheets = ['Cornerstone-{}.csv'.format(i) for i in range(1, 7)]
 sheets.pop(2)
+sheets = sheets + ['loop.csv', 'cudgel.csv']
+sheets = sheets + ['Navient-0{}.csv'.format(i) for i in range(1, 3)]
 
 for i in sheets:
     try:
-        create_ynab_trans(amortization_parser(PATH + i, 1, 1))
+        parser = Amortization(PATH + i, 1, 2)
+        if str(create_ynab_trans(parser.get_next())) == '201':
+            parser.export_remaining()
     except:
         pass

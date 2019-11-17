@@ -75,7 +75,7 @@ sheets = sheets + ['Navient-0{}.csv'.format(i) for i in range(1, 3)]
 
 for i in sheets:
     try:
-        parser = Amortization(PATH + i, 1, 2)
+        parser = Amortization(PATH + i, 1, 15)
         if str(create_ynab_trans(parser.get_next())) == '201':
             parser.export_remaining()
     except:

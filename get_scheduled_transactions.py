@@ -3,7 +3,7 @@ import requests
 from ConfigParser import SafeConfigParser
 
 parser = SafeConfigParser()
-parser.read('simple.ini')
+parser.read('/home/JBalloonist/ynab/data/simple.ini')
 TOKEN = parser.get('API', 'TOKEN')
 BUDGET_ID = parser.get('API', 'BUDGET_ID')
 URL = 'https://api.youneedabudget.com/v1/'

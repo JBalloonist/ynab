@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 now = datetime.now()
-PATH = '/home/JBalloonist/ynab/'
+PATH = '/home/JBalloonist/ynab/data/'
 parser = configparser.ConfigParser()
 parser.read(PATH + 'simple.ini')
 TOKEN = parser.get('API', 'TOKEN')

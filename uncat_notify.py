@@ -28,7 +28,8 @@ for n,i in enumerate(uncat_trans):
     name = i['payee_name']
     amt = int(i['amount']) / -1000
     acct = i['account_name']
-    message = f'Name: {name}\nAccount: {acct}\nAmount: ${amt}'
+    date = i['date']
+    message = f'Name: {name}\nAccount: {acct}\nDate:{date}\nAmount: ${amt}'
 
     if n == 0:
         message = header + message

@@ -7,12 +7,12 @@ import requests
 from twilio.rest import Client
 from dateutil import parser
 
-parser = configparser.ConfigParser()
-parser.read('/home/JBalloonist/ynab/data/simple.ini')
+conf_parser = configparser.ConfigParser()
+conf_parser.read('/home/JBalloonist/ynab/data/simple.ini')
 PATH = '/home/JBalloonist/ynab/data/'
-TOKEN = parser.get('API', 'TOKEN')
-BUDGET_ID = parser.get('API', 'BUDGET_ID')
-ACCOUNT_ID = parser.get('API', 'ACCOUNT_ID')
+TOKEN = conf_parser.get('API', 'TOKEN')
+BUDGET_ID = conf_parser.get('API', 'BUDGET_ID')
+ACCOUNT_ID = conf_parser.get('API', 'ACCOUNT_ID')
 URL = 'https://api.youneedabudget.com/v1/'
 
 now = datetime.datetime.now() - datetime.timedelta(days=3)
@@ -51,8 +51,8 @@ if num > 0:
         name = i['payee_name']
         amt = int(i['amount']) / -1000
         acct = i['account_name']
-        date = parser.parse(i['date'])
-        message = f'Name: {name}\nAccount: {acct}\nDate:{date}\nAmount: ${amt}'
+        date = parser.parse(i['date']).strftime('%b %d, %Y')
+        message = f'Name: {name}\nAccount: {acct}\nDate: {date}\nAmount: ${amt}'
 
         if n == 0:
             message = header + message

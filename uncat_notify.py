@@ -1,9 +1,31 @@
 #!/usr/bin/python3.6
 
+import datetime
 import json
+import configparser
+import requests
 from twilio.rest import Client
+from dateutil import parser
 
+parser = configparser.ConfigParser()
+parser.read('/home/JBalloonist/ynab/data/simple.ini')
 PATH = '/home/JBalloonist/ynab/data/'
+TOKEN = parser.get('API', 'TOKEN')
+BUDGET_ID = parser.get('API', 'BUDGET_ID')
+ACCOUNT_ID = parser.get('API', 'ACCOUNT_ID')
+URL = 'https://api.youneedabudget.com/v1/'
+
+now = datetime.datetime.now() - datetime.timedelta(days=3)
+date_since = now.strftime('%Y-%m-%d')
+
+payload = {'type': 'uncategorized', 'since_date': date_since}
+# r = requests.get('{}budgets/{}/accounts/{}/transactions?access_token={}'.format(URL, BUDGET_ID, ACCOUNT_ID, TOKEN), params=payload)
+r = requests.get('{}budgets/{}/transactions?access_token={}'.format(URL, BUDGET_ID, TOKEN), params=payload)
+
+print(r.status_code)
+data = r.json()
+with open('output.json', 'w') as out:
+    json.dump(data, out)
 
 # Your Account Sid and Auth Token from twilio.com/console
 # DANGER! This is insecure. See http://twil.io/secure
@@ -24,21 +46,22 @@ with open('output.json', 'r') as out:
 num = len(uncat_trans)
 header = f"There are {num} uncategorized transactions in YNAB.\n"
 
-for n,i in enumerate(uncat_trans):
-    name = i['payee_name']
-    amt = int(i['amount']) / -1000
-    acct = i['account_name']
-    date = i['date']
-    message = f'Name: {name}\nAccount: {acct}\nDate:{date}\nAmount: ${amt}'
+if num > 0:
+    for n,i in enumerate(uncat_trans):
+        name = i['payee_name']
+        amt = int(i['amount']) / -1000
+        acct = i['account_name']
+        date = parser.parse(i['date'])
+        message = f'Name: {name}\nAccount: {acct}\nDate:{date}\nAmount: ${amt}'
 
-    if n == 0:
-        message = header + message
+        if n == 0:
+            message = header + message
 
-    print(message)
+        print(message)
 
-    message = client.messages \
-                .create(
-                     body=message,
-                     from_='+14159171602',
-                     to='+19372316721'
-                 )
+        message = client.messages \
+                    .create(
+                         body=message,
+                         from_='+14159171602',
+                         to='+19374090100'
+                     )

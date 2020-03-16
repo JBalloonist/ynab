@@ -68,9 +68,7 @@ def create_ynab_trans(trans):
     return post_trans(payload)
 
 
-sheets = ['Cornerstone-{}.csv'.format(i) for i in range(1, 7)]
-sheets.pop(2)
-sheets = sheets + ['loop.csv', 'cudgel.csv']
+sheets = ['loop.csv', 'cudgel.csv', 'sofi.csv']
 sheets = sheets + ['Navient-0{}.csv'.format(i) for i in range(1, 3)]
 
 for i in sheets:

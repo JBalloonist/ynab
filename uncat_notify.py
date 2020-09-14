@@ -15,7 +15,7 @@ BUDGET_ID = conf_parser.get('API', 'BUDGET_ID')
 ACCOUNT_ID = conf_parser.get('API', 'ACCOUNT_ID')
 URL = 'https://api.youneedabudget.com/v1/'
 
-now = datetime.datetime.now() - datetime.timedelta(days=3)
+now = datetime.datetime.now() - datetime.timedelta(days=30)
 date_since = now.strftime('%Y-%m-%d')
 
 payload = {'type': 'uncategorized', 'since_date': date_since}
@@ -63,5 +63,6 @@ if num > 0:
                     .create(
                          body=message,
                          from_='+14159171602',
-                         to='+19374090100'
+                         to='+19372316721'
                      )
+

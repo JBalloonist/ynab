@@ -1,9 +1,11 @@
 import json
 import requests
-from ConfigParser import SafeConfigParser
+import configparser
+from pathlib import Path
 
-parser = SafeConfigParser()
-parser.read('/home/JBalloonist/ynab/data/simple.ini')
+path = Path.cwd().home() / 'ynab' / 'data' / 'simple.ini'
+parser = configparser.ConfigParser()
+parser.read([path])
 TOKEN = parser.get('API', 'TOKEN')
 BUDGET_ID = parser.get('API', 'BUDGET_ID')
 ACCOUNT_ID = parser.get('API', 'ACCOUNT_ID')

@@ -7,7 +7,8 @@ from pathlib import Path
 def main():
     flagged_trans = get_flagged_data()
     new_transactions = create_update_trans(flagged_trans)
-    
+    payload = {'transactions': new_transactions}
+    post_trans(payload)
 
     
 def get_flagged_data():
@@ -22,7 +23,13 @@ def get_flagged_data():
 
 
 def create_update_trans(transactions):
-    transactions = {}
+    id_and_flag = [{key: tran[key] for key in tran.keys() & {'id', 'flag_color', 'account_id', 'date', 'amount'}} for tran in transactions]
+
+    for tran in id_and_flag:
+        tran['flag_color'] = None
+
+    return id_and_flag
+    
 
 
 def post_trans(payload):

@@ -52,7 +52,6 @@ class Amortization(object):
 
 
 def create_ynab_trans(trans):
-    now = datetime.now()
     fmt = '%Y-%m-%d'
     trans.date = trans.date.dt.strftime(fmt)
     trans_dict = trans.T.to_dict()

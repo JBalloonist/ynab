@@ -1,9 +1,34 @@
+import json
 import configparser
 import requests
 from pathlib import Path
+import get_accounts
 
 def account_names(parameter_list):
     pass
+
+
+def get_account_id():
+    """
+    docstring
+    """
+    PATH = Path.cwd().parent / 'ynab' / 'data' / 'accounts_output.json'
+    if PATH.exists():
+        pass
+    else:
+        get_accounts.get_accounts()
+
+    with open(PATH) as out:
+        account_data = json.loads(out.read())
+
+    accounts = account_data['data']['accounts']
+    accounts = {acct['name']: acct['id'] for acct in accounts}
+    for n, acct_name in enumerate(accounts.keys(), start=1):
+        print(f'{n}: {acct_name}')
+
+    choice = int(input('Which account? Type a number of 1 through {}')) - 1
+    return accounts[accounts.keys()[choice]]
+
 
 
 def post_trans(payload):
@@ -26,7 +51,7 @@ def post_trans(payload):
     return r.status_code
 
 
-def get_scheduled_trans(parameter_list):
+def get_scheduled_trans():
     parser = configparser.ConfigParser()
     PATH = Path.cwd().parent / 'ynab' / 'data' / 'simple.ini'
     parser.read(PATH)
@@ -37,4 +62,4 @@ def get_scheduled_trans(parameter_list):
     r = requests.get('{}budgets/{}/scheduled_transactions?access_token={}'.format(URL, BUDGET_ID, TOKEN))
 
     print(r.status_code)
-    data = r.json()
+    return r.json()

@@ -1,19 +1,7 @@
 import json
-import requests
-from ConfigParser import SafeConfigParser
+from helpers import get_scheduled_trans
 
-parser = SafeConfigParser()
-parser.read('/home/JBalloonist/ynab/data/simple.ini')
-TOKEN = parser.get('API', 'TOKEN')
-BUDGET_ID = parser.get('API', 'BUDGET_ID')
-URL = 'https://api.youneedabudget.com/v1/'
-
-r = requests.get('{}budgets/{}/scheduled_transactions?access_token={}'.format(URL, BUDGET_ID, TOKEN))
-
-print(r.status_code)
-data = r.json()
+data = get_scheduled_trans()
 with open('scheduled.json', 'w') as out:
     json.dump(data, out)
-
-# with open('scheduled.json', 'r') as out:
-#     data = json.load(out)
+    

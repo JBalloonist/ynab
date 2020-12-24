@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 
 
 def main():
-    PATH = '/home/JBalloonist/ynab/data/'
     sheets = ['loop.csv', 'cudgel.csv', 'sofi.csv']
     sheets = sheets + ['Navient-0{}.csv'.format(i) for i in range(1, 3)]
 

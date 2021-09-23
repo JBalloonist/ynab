@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 
 def main():
-    sheets = ['loop.csv', 'cudgel.csv', 'sofi.csv']
+    sheets = ['loop.csv', 'cudgel.csv', 'sofi.csv', 'tlx.csv']
     sheets = sheets + ['Navient-0{}.csv'.format(i) for i in range(1, 3)]
 
     for i in sheets:

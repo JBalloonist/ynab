@@ -68,7 +68,7 @@ def create_ynab_trans(trans):
     return post_trans(payload)
 
 
-sheets = ['loop.csv', 'cudgel.csv', 'citizens.csv']
+sheets = ['loop.csv', 'cudgel.csv', 'citizens.csv', 'tlx.csv']
 sheets = sheets + ['Navient-0{}.csv'.format(i) for i in range(1, 3)]
 
 for i in sheets:

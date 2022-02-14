@@ -1,19 +1,21 @@
 #!/usr/bin/python3.6
 
-import configparser
-import requests
 import pandas as pd
+from helpers import post_trans
 from datetime import datetime, timedelta
 
-now = datetime.now()
-PATH = '/home/JBalloonist/ynab/data/'
-parser = configparser.ConfigParser()
-parser.read(PATH + 'simple.ini')
-TOKEN = parser.get('API', 'TOKEN')
-BUDGET_ID = parser.get('API', 'BUDGET_ID')
-ACCOUNT_ID = parser.get('API', 'ACCOUNT_ID')
-URL = 'https://api.youneedabudget.com/v1/'
-fmt = '%Y-%m-%d'
+
+def main():
+    sheets = ['loop.csv', 'cudgel.csv', 'sofi.csv', 'tlx.csv']
+    sheets = sheets + ['Navient-0{}.csv'.format(i) for i in range(1, 3)]
+
+    for i in sheets:
+        try:
+            parser = Amortization(PATH + i, 1, 25)
+            if str(create_ynab_trans(parser.get_next())) == '201':
+                parser.export_remaining()
+        except:
+            pass
 
 
 class Amortization(object):
@@ -48,19 +50,8 @@ class Amortization(object):
         self.get_remaining().to_csv(self.file, index=False)
 
 
-def post_trans(payload):
-    url = '{}budgets/{}/transactions?access_token={}'.format(URL, BUDGET_ID, TOKEN)
-    r = requests.post(url, json=payload)
-    print('')
-    print(r.status_code)
-    print('')
-    print(r.text)
-    print('')
-    print(r.request.body)
-    return r.status_code
-
-
 def create_ynab_trans(trans):
+    fmt = '%Y-%m-%d'
     trans.date = trans.date.dt.strftime(fmt)
     trans_dict = trans.T.to_dict()
     trans = trans_dict[0]
@@ -68,13 +59,5 @@ def create_ynab_trans(trans):
     return post_trans(payload)
 
 
-sheets = ['loop.csv', 'cudgel.csv', 'sofi.csv']
-sheets = sheets + ['Navient-0{}.csv'.format(i) for i in range(1, 3)]
-
-for i in sheets:
-    try:
-        parser = Amortization(PATH + i, 1, 25)
-        if str(create_ynab_trans(parser.get_next())) == '201':
-            parser.export_remaining()
-    except:
-        pass
+if __name__ == "__main__":
+    main()

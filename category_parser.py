@@ -37,11 +37,10 @@ for main_cat in category_groups:
         
         balances[master_cat] = mast_balances
 
-
+overspent = []
 for k, v in balances.items():
-    print(k)
-    print(sum(v) / 1000)
+    tot = sum(v) / 1000
+    print(f'{k}: {tot}')
+    overspent.append(tot)
 
-# print(balances)
-# overspent = sum(balances) / 1000
-# print('Total overspent: {}').format(overspent)
+print(f'\nTotal overspent: {sum(overspent)}')

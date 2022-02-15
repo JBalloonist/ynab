@@ -3,3 +3,4 @@ key.txt
 *.ini
 *.csv
 **data
+*.simple.ini.icloud

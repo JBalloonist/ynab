@@ -15,6 +15,10 @@ BUDGET_ID = conf_parser.get('API', 'BUDGET_ID')
 ACCOUNT_ID = conf_parser.get('API', 'ACCOUNT_ID')
 URL = 'https://api.youneedabudget.com/v1/'
 
+account_sid = conf_parser.get('TWILIO', 'account_sid')
+auth_token = conf_parser.get('TWILIO', 'auth_token')
+client = Client(account_sid, auth_token)
+
 now = datetime.datetime.now() - datetime.timedelta(days=30)
 date_since = now.strftime('%Y-%m-%d')
 
@@ -27,11 +31,6 @@ data = r.json()
 with open('output.json', 'w') as out:
     json.dump(data, out)
 
-# Your Account Sid and Auth Token from twilio.com/console
-# DANGER! This is insecure. See http://twil.io/secure
-account_sid = 'ACf4c509e765fab2a05da9204c7820139f'
-auth_token = '0b66ae908b2b9d8b4ea869788a860cdc'
-client = Client(account_sid, auth_token)
 
 with open(f'{PATH}accounts_output.json') as out:
     accounts = json.load(out)
@@ -47,22 +46,24 @@ num = len(uncat_trans)
 header = f"There are {num} uncategorized transactions in YNAB.\n"
 
 if num > 0:
-    for n,i in enumerate(uncat_trans):
+    for n,i in enumerate(uncat_trans)
         name = i['payee_name']
         amt = int(i['amount']) / -1000
         acct = i['account_name']
         date = parser.parse(i['date']).strftime('%b %d, %Y')
-        message = f'Name: {name}\nAccount: {acct}\nDate: {date}\nAmount: ${amt}'
+        if 'Amazon' not in:
+            message = f'Name: {name}\nAccount: {acct}\nDate: {date}\nAmount: ${amt}'
 
         if n == 0:
             message = header + message
 
         print(message)
 
+        """
         message = client.messages \
                     .create(
                          body=message,
                          from_='+14159171602',
                          to='+19372316721'
-                     )
-
+                 )
+        """

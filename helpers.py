@@ -30,7 +30,7 @@ def get_account_id():
     return accounts[accounts.keys()[choice]]
 
 
-
+# this needs to be converted to a Class...
 def post_trans(payload):
     parser = configparser.ConfigParser()
     PATH = Path.cwd().parent / 'ynab' / 'data' / 'simple.ini'
@@ -63,3 +63,23 @@ def get_scheduled_trans():
 
     print(r.status_code)
     return r.json()
+
+
+def patch_trans(payload):
+    parser = configparser.ConfigParser()
+    PATH = Path.cwd().parent / 'ynab' / 'data' / 'simple.ini'
+    parser.read(PATH)
+    TOKEN = parser.get('API', 'TOKEN')
+    BUDGET_ID = parser.get('API', 'BUDGET_ID')
+    ACCOUNT_ID = parser.get('API', 'ACCOUNT_ID')
+    URL = 'https://api.youneedabudget.com/v1/'
+
+    url = '{}budgets/{}/transactions?access_token={}'.format(URL, BUDGET_ID, TOKEN)
+    r = requests.patch(url, json=payload)
+    print('')
+    print(r.status_code)
+    print('')
+    print(r.text)
+    print('')
+    print(r.request.body)
+    return r.status_code

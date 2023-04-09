@@ -15,6 +15,10 @@ BUDGET_ID = conf_parser.get('API', 'BUDGET_ID')
 ACCOUNT_ID = conf_parser.get('API', 'ACCOUNT_ID')
 URL = 'https://api.youneedabudget.com/v1/'
 
+account_sid = conf_parser.get('TWILIO', 'account_sid')
+auth_token = conf_parser.get('TWILIO', 'auth_token')
+client = Client(account_sid, auth_token)
+
 now = datetime.datetime.now() - datetime.timedelta(days=30)
 date_since = now.strftime('%Y-%m-%d')
 
@@ -27,11 +31,6 @@ data = r.json()
 with open('output.json', 'w') as out:
     json.dump(data, out)
 
-# Your Account Sid and Auth Token from twilio.com/console
-# DANGER! This is insecure. See http://twil.io/secure
-account_sid = 'ACf4c509e765fab2a05da9204c7820139f'
-auth_token = '0b66ae908b2b9d8b4ea869788a860cdc'
-client = Client(account_sid, auth_token)
 
 with open(f'{PATH}accounts_output.json') as out:
     accounts = json.load(out)
@@ -41,7 +40,7 @@ with open(f'{PATH}accounts_output.json') as out:
 with open('output.json', 'r') as out:
     data = json.load(out)
     trans = data['data']['transactions']
-    uncat_trans = [i for i in trans if i['transfer_account_id'] is None and i['account_name'] in budget_accounts]
+    uncat_trans = [i for i in trans if i['transfer_account_id'] is None and i['account_name'] in budget_accounts and 'Amazon' not in i['account_name']]
 
 num = len(uncat_trans)
 header = f"There are {num} uncategorized transactions in YNAB.\n"
@@ -64,5 +63,4 @@ if num > 0:
                          body=message,
                          from_='+14159171602',
                          to='+19372316721'
-                     )
-
+                 )

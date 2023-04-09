@@ -40,30 +40,27 @@ with open(f'{PATH}accounts_output.json') as out:
 with open('output.json', 'r') as out:
     data = json.load(out)
     trans = data['data']['transactions']
-    uncat_trans = [i for i in trans if i['transfer_account_id'] is None and i['account_name'] in budget_accounts]
+    uncat_trans = [i for i in trans if i['transfer_account_id'] is None and i['account_name'] in budget_accounts and 'Amazon' not in i['account_name']]
 
 num = len(uncat_trans)
 header = f"There are {num} uncategorized transactions in YNAB.\n"
 
 if num > 0:
-    for n,i in enumerate(uncat_trans)
+    for n,i in enumerate(uncat_trans):
         name = i['payee_name']
         amt = int(i['amount']) / -1000
         acct = i['account_name']
         date = parser.parse(i['date']).strftime('%b %d, %Y')
-        if 'Amazon' not in:
-            message = f'Name: {name}\nAccount: {acct}\nDate: {date}\nAmount: ${amt}'
+        message = f'Name: {name}\nAccount: {acct}\nDate: {date}\nAmount: ${amt}'
 
         if n == 0:
             message = header + message
 
         print(message)
 
-        """
         message = client.messages \
                     .create(
                          body=message,
                          from_='+14159171602',
                          to='+19372316721'
                  )
-        """

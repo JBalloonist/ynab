@@ -53,7 +53,7 @@ def post_trans(payload):
 
 def get_scheduled_trans():
     parser = configparser.ConfigParser()
-    PATH = Path.cwd().parent / 'ynab' / 'data' / 'simple.ini'
+    PATH = Path.cwd().parent / 'data' / 'simple.ini'
     parser.read(PATH)
     TOKEN = parser.get('API', 'TOKEN')
     BUDGET_ID = parser.get('API', 'BUDGET_ID')
@@ -67,7 +67,7 @@ def get_scheduled_trans():
 
 def patch_trans(payload):
     parser = configparser.ConfigParser()
-    PATH = Path.cwd().parent / 'ynab' / 'data' / 'simple.ini'
+    PATH = Path.cwd().parent / 'data' / 'simple.ini'
     parser.read(PATH)
     TOKEN = parser.get('API', 'TOKEN')
     BUDGET_ID = parser.get('API', 'BUDGET_ID')
